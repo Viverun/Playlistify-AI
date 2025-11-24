@@ -3,7 +3,7 @@
  * Run with: npm test (after adding test script to package.json)
  */
 
-import { parsePlaylistIntent } from "./nlpHelper";
+import { parsePlaylistIntent } from "./nlpHelper.js";
 
 // Mock test framework (can replace with Jest/Mocha later)
 function test(name: string, fn: () => void | Promise<void>): void {

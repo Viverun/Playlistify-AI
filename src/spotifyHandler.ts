@@ -1,6 +1,6 @@
 import SpotifyWebApi from "spotify-web-api-node";
-import { searchCache, recommendCache } from "./cache";
-import { SpotifyTrack, MCPResponse } from "./types";
+import { searchCache, recommendCache } from "./cache.js";
+import { SpotifyTrack, MCPResponse } from "./types.js";
 
 let spotifyApi: SpotifyWebApi;
 let tokenExpiresAt = 0;
@@ -178,7 +178,7 @@ export async function getRecommendations(
  * Create a playlist and optionally add tracks
  */
 export async function createPlaylist(
-  userId: string | undefined,
+  _userId: string | undefined,
   name: string,
   description: string,
   trackUris: string[],

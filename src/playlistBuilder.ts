@@ -1,6 +1,6 @@
-import spotifyHandler from './spotifyHandler';
-import { parsePlaylistIntent } from './nlpHelper';
-import { SpotifyTrack } from './types';
+import spotifyHandler from './spotifyHandler.js';
+import { parsePlaylistIntent } from './nlpHelper.js';
+import { SpotifyTrack } from './types.js';
 
 /**
  * Advanced playlist builder with smart track selection
@@ -169,7 +169,7 @@ function applyDiversity(
 export async function mergePlaylists(
   playlistIds: string[],
   newPlaylistName: string,
-  options?: { shuffle?: boolean; removeDuplicates?: boolean }
+  _options?: { shuffle?: boolean; removeDuplicates?: boolean }
 ): Promise<{ success: boolean; playlistId?: string; error?: string }> {
   try {
     console.log('Merging playlists', { playlistIds, newPlaylistName });

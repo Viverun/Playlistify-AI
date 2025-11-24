@@ -1,4 +1,4 @@
-import { NLPPlaylistIntent } from './types';
+import { NLPPlaylistIntent } from './types.js';
 
 /**
  * Optional NLP helper for interpreting natural language playlist requests
