@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Playlistify AI - Smart Playlist Generator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Animated Background -->
+  <div class="animated-bg">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+  </div>
+
+  <nav>
+    <div class="logo">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
+      </svg>
+      <span>Playlistify AI</span>
+    </div>
+    <div class="user-profile" id="userProfile">
+      <button class="btn-ghost" id="loginBtn" onclick="handleLogin()">Login</button>
+    </div>
+  </nav>
+
+  <main>
+    <h1 class="text-gradient">Your AI Music Curator</h1>
+    <p class="subtitle">Describe your mood, activity, or vibe, and let AI craft the perfect Spotify playlist for you instantly.</p>
+
+    <div class="input-container">
+      <input type="text" class="hero-input" id="promptInput" placeholder="Describe your vibe... e.g., 'Late night coding in Tokyo'" autocomplete="off">
+      <button class="send-btn" id="generateBtn" onclick="generatePlaylist()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="22" y1="2" x2="11" y2="13"></line>
+          <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+        </svg>
+      </button>
+    </div>
+
+    <div class="chips-container" id="chips">
+      <div class="chip" onclick="useChip('💪 High energy workout')">💪 High energy workout</div>
+      <div class="chip" onclick="useChip('🌧️ Melancholy rainy day')">🌧️ Melancholy rainy day</div>
+      <div class="chip" onclick="useChip('🚗 Late night drive')">🚗 Late night drive</div>
+      <div class="chip" onclick="useChip('🎉 House party vibes')">🎉 House party vibes</div>
+    </div>
+
+    <div id="loadingState" class="loading-state hidden">
+      <div class="spinner"></div>
+      <div class="loading-text" id="loadingText">Analyzing your vibe...</div>
+    </div>
+
+    <div id="resultContainer" class="result-container hidden">
+      <!-- Result will be injected here -->
+    </div>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Playlistify AI • Powered by Apify & Spotify</p>
+  </footer>
+
+  <script>
+    // Simple state management
+    const state = {
+      user: JSON.parse(localStorage.getItem('user') || 'null'),
+      isGenerating: false
+    };
+
+    // Initialize
+    function init() {
+      updateAuthUI();
+      
+      // Input enter key listener
+      document.getElementById('promptInput').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') generatePlaylist();
+      });
+    }
+
+    function updateAuthUI() {
+      const profile = document.getElementById('userProfile');
+      if (state.user) {
+        profile.innerHTML = `
+          <span style="font-size: 0.9rem; color: var(--secondary);">Hi, ${state.user.name}</span>
+          <button class="btn-ghost" onclick="handleLogout()">Logout</button>
+        `;
+      } else {
+        profile.innerHTML = `<button class="btn-ghost" onclick="handleLogin()">Login</button>`;
+      }
+    }
+
+    function handleLogin() {
+      // Mock login
+      const email = prompt("Enter your email to login:");
+      if (email) {
+        state.user = { name: email.split('@')[0], email };
+        localStorage.setItem('user', JSON.stringify(state.user));
+        updateAuthUI();
+      }
+    }
+
+    function handleLogout() {
+      localStorage.removeItem('user');
+      state.user = null;
+      updateAuthUI();
+    }
+
+    function useChip(text) {
+      const input = document.getElementById('promptInput');
+      input.value = text;
+      input.focus();
+      generatePlaylist();
+    }
+
+    async function generatePlaylist() {
+      if (state.isGenerating) return;
+      
+      const input = document.getElementById('promptInput');
+      const promptText = input.value.trim();
+      
+      if (!promptText) return;
+
+      // UI Updates
+      state.isGenerating = true;
+      document.getElementById('generateBtn').disabled = true;
+      document.getElementById('chips').classList.add('hidden');
+      document.getElementById('resultContainer').classList.add('hidden');
+      document.getElementById('loadingState').classList.remove('hidden');
+      
+      const loadingText = document.getElementById('loadingText');
+      const steps = ["Analyzing your vibe...", "Searching Spotify catalog...", "Curating tracks...", "Finalizing playlist..."];
+      let stepIndex = 0;
+      
+      const stepInterval = setInterval(() => {
+        stepIndex = (stepIndex + 1) % steps.length;
+        loadingText.textContent = steps[stepIndex];
+      }, 1500);
+
+      try {
+        // 1. Search Tracks
+        const searchRes = await fetch('/mcp', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            tool: 'search-track',
+            input: { query: promptText, limit: 20 }
+          })
+        });
+        
+        const searchData = await searchRes.json();
+        if (searchData.status === 'error') throw new Error(searchData.message);
+        
+        const tracks = searchData.data.tracks;
+        if (!tracks || tracks.length === 0) throw new Error('No tracks found for this vibe.');
+
+        // 2. Create Playlist
+        const trackUris = tracks.map(t => t.uri);
+        const createRes = await fetch('/mcp', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            tool: 'create-playlist',
+            input: {
+              name: `Playlistify: ${promptText}`,
+              description: `AI-curated playlist for: ${promptText}`,
+              trackUris: trackUris,
+              isPublic: true
+            }
+          })
+        });
+
+        const createData = await createRes.json();
+        if (createData.status === 'error') throw new Error(createData.message);
+
+        // Show Result
+        showResult(createData.data.playlist, tracks.slice(0, 5));
+
+      } catch (err) {
+        alert(`Error: ${err.message}`);
+      } finally {
+        clearInterval(stepInterval);
+        state.isGenerating = false;
+        document.getElementById('generateBtn').disabled = false;
+        document.getElementById('loadingState').classList.add('hidden');
+      }
+    }
+
+    function showResult(playlist, previewTracks) {
+      const container = document.getElementById('resultContainer');
+      
+      const trackListHtml = previewTracks.map(t => `
+        <div class="track-item">
+          <span class="track-name">${t.name}</span>
+          <span class="track-artist">${t.artists[0].name}</span>
+        </div>
+      `).join('');
+
+      container.innerHTML = `
+        <div class="playlist-card">
+          <div class="card-header">
+            <div class="cover-art">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
+              </svg>
+            </div>
+            <div class="playlist-info">
+              <h2>${playlist.name}</h2>
+              <p>${playlist.trackCount} tracks • Curated by AI</p>
+            </div>
+          </div>
+          
+          <div class="track-list">
+            ${trackListHtml}
+          </div>
+
+          <a href="${playlist.external_urls.spotify}" target="_blank" class="btn-spotify">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/>
+            </svg>
+            Open in Spotify
+          </a>
+        </div>
+      `;
+      
+      container.classList.remove('hidden');
+    }
+
+    init();
+  </script>
+</body>
+</html>
