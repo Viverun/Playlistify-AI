@@ -1,13 +1,48 @@
 # Playlistify AI 🎵
 
-> **Transform your mood into music with AI-powered playlist generation**
+> **Your words. Your vibe. Perfect playlists.**
 
 [![Live Demo](https://img.shields.io/badge/Live%20Demo-Visit%20Site-brightgreen?style=for-the-badge)](https://playlistifyai.up.railway.app)
 [![License](https://img.shields.io/badge/License-MIT-blue?style=for-the-badge)](LICENSE)
+[![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)](https://nodejs.org/)
+[![Spotify](https://img.shields.io/badge/Spotify-1DB954?style=for-the-badge&logo=spotify&logoColor=white)](https://developer.spotify.com/)
 
-Playlistify AI is an intelligent playlist generator that transforms natural language prompts into perfectly curated Spotify playlists. Simply describe what you want to hear, and let AI do the rest.
+An AI-powered playlist generator that turns natural language into curated Spotify playlists. Describe your mood, activity, or vibe in plain English—get the perfect soundtrack instantly.
 
 **🔗 Live Application:** [playlistifyai.up.railway.app](https://playlistifyai.up.railway.app)
+
+---
+
+## 📸 Screenshots
+
+<div align="center">
+
+<img src="https://github.com/avanishkasar/Playlistify-AI/blob/main/1.png" alt="Playlistify AI Interface" width="800"/>
+
+<img src="https://github.com/avanishkasar/Playlistify-AI/blob/main/2.png" alt="Playlist Generation" width="800"/>
+
+<img src="https://github.com/avanishkasar/Playlistify-AI/blob/main/3.png" alt="Results Display" width="800"/>
+
+</div>
+
+---
+
+## 🎥 Video Tutorial
+
+<div align="center">
+
+[![Watch Tutorial](https://img.shields.io/badge/▶️_Watch-Video_Tutorial-red?style=for-the-badge&logo=youtube)](YOUR_YOUTUBE_VIDEO_LINK)
+
+*Click above to watch a complete walkthrough of Playlistify AI*
+
+</div>
+
+---
+
+## 🏷️ Topics
+
+ai machine-learning nlp natural-language-processing spotify spotify-api playlist-generator music typescript nodejs express docker railway music-recommendation playlist-maker ai-music spotify-playlist music-discovery
 
 ---
 
@@ -170,3 +205,32 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 **Made with ❤️ and AI**
 
 [Try it Now](https://playlistifyai.up.railway.app) | [Report Issue](https://github.com/Viverun/Playlistify-AI/issues) | [Request Feature](https://github.com/Viverun/Playlistify-AI/issues)
+
+</div>
+2. Click on **Link Git Repository** button
+
+### Push project on your local machine to Apify
+
+You can also deploy the project on your local machine to Apify without the need for the Git repository.
+
+1. Log in to Apify. You will need to provide your [Apify API Token](https://console.apify.com/account/integrations) to complete this action.
+
+    ```bash
+    apify login
+    ```
+
+2. Deploy your Actor. This command will deploy and build the Actor on the Apify Platform. You can find your newly created Actor under [Actors -> My Actors](https://console.apify.com/actors?tab=my).
+
+    ```bash
+    apify push
+    ```
+
+## Documentation reference
+
+To learn more about Apify and Actors, take a look at the following resources:
+
+- [Apify SDK for JavaScript documentation](https://docs.apify.com/sdk/js)
+- [Apify SDK for Python documentation](https://docs.apify.com/sdk/python)
+- [Apify Platform documentation](https://docs.apify.com/platform)
+- [Join our developer community on Discord](https://discord.com/invite/jyEM2PRvMU)
+#
