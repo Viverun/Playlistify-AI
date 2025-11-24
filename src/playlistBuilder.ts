@@ -29,11 +29,11 @@ export async function buildSmartPlaylist(
   options: PlaylistBuilderOptions
 ): Promise<{ success: boolean; playlistId?: string; tracks?: SpotifyTrack[]; error?: string }> {
   try {
-    log.info('Building smart playlist', { description: nlDescription, options });
+    console.log('Building smart playlist', { description: nlDescription, options });
 
     // Parse intent from description
     const intent = parsePlaylistIntent(nlDescription);
-    log.info('Parsed intent', { intent });
+    console.log('Parsed intent', { intent });
 
     // Get recommendations based on intent
     const seedGenres = intent.suggestedSeeds?.genres || ['pop'];
@@ -68,7 +68,7 @@ export async function buildSmartPlaylist(
       tracks = tracks.slice(0, options.targetCount);
     }
 
-    log.info('Playlist tracks selected', { count: tracks.length });
+    console.log('Playlist tracks selected', { count: tracks.length });
 
     // Create playlist
     const trackUris = tracks.map((t) => t.uri);
@@ -92,7 +92,7 @@ export async function buildSmartPlaylist(
       tracks,
     };
   } catch (err: any) {
-    log.error('Smart playlist builder failed', { error: err?.message || err });
+    console.error('Smart playlist builder failed', { error: err?.message || err });
     return {
       success: false,
       error: err?.message || String(err),
@@ -172,7 +172,7 @@ export async function mergePlaylists(
   options?: { shuffle?: boolean; removeDuplicates?: boolean }
 ): Promise<{ success: boolean; playlistId?: string; error?: string }> {
   try {
-    log.info('Merging playlists', { playlistIds, newPlaylistName });
+    console.log('Merging playlists', { playlistIds, newPlaylistName });
 
     // Note: This would require additional Spotify API calls to fetch playlist tracks
     // For now, this is a placeholder for future implementation

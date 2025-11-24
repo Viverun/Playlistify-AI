@@ -15,7 +15,7 @@ export function initializeSpotify(
     clientSecret,
   });
   spotifyApi.setRefreshToken(refreshToken);
-  log.info("Spotify API initialized");
+  console.log("Spotify API initialized");
 }
 
 
@@ -27,7 +27,7 @@ async function ensureAccessToken(): Promise<string> {
 
   // Only refresh if token is expired or about to expire (within 60 seconds)
   if (Date.now() < tokenExpiresAt - 60000) {
-    log.debug("Using cached access token");
+    // console.log("Using cached access token");
     return spotifyApi.getAccessToken() || "";
   }
 
@@ -40,10 +40,10 @@ async function ensureAccessToken(): Promise<string> {
     spotifyApi.setAccessToken(accessToken);
     tokenExpiresAt = Date.now() + expiresIn * 1000;
 
-    log.info("Spotify access token refreshed", { expiresIn });
+    console.log("Spotify access token refreshed", { expiresIn });
     return accessToken;
   } catch (err: any) {
-    log.error("Failed to refresh Spotify access token", {
+    console.error("Failed to refresh Spotify access token", {
       error: err?.message || err,
     });
     throw new Error(
@@ -70,7 +70,7 @@ export async function searchTracks(
     const cacheKey = `search:${query}:${limit}`;
     const cached = searchCache.get(cacheKey);
     if (cached) {
-      log.info("Returning cached search results", { query });
+      console.log("Returning cached search results", { query });
       return cached;
     }
 
@@ -95,11 +95,11 @@ export async function searchTracks(
     };
 
     searchCache.set(cacheKey, response);
-    log.info("Search completed", { query, resultCount: tracks.length });
+    console.log("Search completed", { query, resultCount: tracks.length });
 
     return response;
   } catch (err: any) {
-    log.error("Search tracks failed", { query, error: err?.message || err });
+    console.error("Search tracks failed", { query, error: err?.message || err });
     return {
       status: "error",
       message: `Search failed: ${err?.message || String(err)}`,
@@ -130,14 +130,14 @@ export async function getRecommendations(
     // Spotify requires at least one seed
     if (!params.seed_artists && !params.seed_genres && !params.seed_tracks) {
       params.seed_genres = ["pop"];
-      log.info("No seeds provided, defaulting to pop genre");
+      console.log("No seeds provided, defaulting to pop genre");
     }
 
     // Create cache key from params
     const cacheKey = `recommend:${JSON.stringify(params)}`;
     const cached = recommendCache.get(cacheKey);
     if (cached) {
-      log.info("Returning cached recommendations");
+      console.log("Returning cached recommendations");
       return cached;
     }
 
@@ -159,14 +159,14 @@ export async function getRecommendations(
     };
 
     recommendCache.set(cacheKey, response);
-    log.info("Recommendations completed", {
+    console.log("Recommendations completed", {
       seedCount: Object.keys(params).length - 1,
       resultCount: tracks.length,
     });
 
     return response;
   } catch (err: any) {
-    log.error("Get recommendations failed", { error: err?.message || err });
+    console.error("Get recommendations failed", { error: err?.message || err });
     return {
       status: "error",
       message: `Recommendations failed: ${err?.message || String(err)}`,
@@ -201,7 +201,7 @@ export async function createPlaylist(
     });
 
     const playlist = createRes.body;
-    log.info("Playlist created", {
+    console.log("Playlist created", {
       playlistId: playlist.id,
       name: playlist.name,
     });
@@ -218,7 +218,7 @@ export async function createPlaylist(
         await spotifyApi.addTracksToPlaylist(playlist.id, chunk);
       }
 
-      log.info("Tracks added to playlist", {
+      console.log("Tracks added to playlist", {
         playlistId: playlist.id,
         trackCount: trackUris.length,
       });
