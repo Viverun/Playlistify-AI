@@ -16,15 +16,15 @@ app.use(bodyParser.json());
 app.use(express.static("public"));
 
 // Health check
-app.get("/", (req, res) => {
+app.get("/", (_req, res) => {
   res.sendFile("index.html", { root: "public" });
 });
 
-app.get("/health", (req, res) => {
+app.get("/health", (_req, res) => {
   res.json({ status: "healthy" });
 });
 
-app.get("/stats", (req, res) => {
+app.get("/stats", (_req, res) => {
     res.json({
         status: "running",
         uptime: process.uptime(),
@@ -50,7 +50,12 @@ app.post("/mcp", async (req: Request, res: Response) => {
               result = await spotifyHandler.searchTracks(body.input.query, body.input.limit);
               break;
           case 'recommend':
-              result = await spotifyHandler.getRecommendations(body.input);
+              result = await spotifyHandler.getRecommendations(
+                  body.input.seedArtists,
+                  body.input.seedGenres,
+                  body.input.seedTracks,
+                  body.input.limit
+              );
               break;
           case 'create-playlist':
               let playlistName = body.input.name;
@@ -88,7 +93,7 @@ async function start() {
     }
 
     app.listen(PORT, () => {
-        console.log(\Server running on port \\);
+        console.log(`Server running on port ${PORT}`);
     });
 }
 
