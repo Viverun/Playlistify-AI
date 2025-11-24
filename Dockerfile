@@ -1,56 +1,28 @@
-# Specify the base Docker image. You can read more about
-# the available images at https://docs.apify.com/sdk/js/docs/guides/docker-images
-# You can also use any other image from Docker Hub.
-FROM apify/actor-node:22 AS builder
+# Use Node.js 20
+FROM node:20-alpine
 
-# Check preinstalled packages
-RUN npm ls crawlee apify puppeteer playwright
+# Set working directory
+WORKDIR /app
 
-# Copy just package.json and package-lock.json
-# to speed up the build using Docker layer cache.
-COPY --chown=myuser:myuser package*.json ./
+# Copy package files
+COPY package*.json ./
+COPY tsconfig.json ./
 
-# Install all dependencies. Don't audit to speed up the installation.
-RUN npm install --include=dev --audit=false
+# Install dependencies (including devDependencies for build)
+RUN npm ci
 
-# Next, copy the source files using the user set
-# in the base image.
-COPY --chown=myuser:myuser . ./
+# Copy source code
+COPY src ./src
+COPY public ./public
 
-# Install all dependencies and build the project.
-# Don't audit to speed up the installation.
+# Build TypeScript
 RUN npm run build
 
-# Create final image
-FROM apify/actor-node:22
+# Remove devDependencies
+RUN npm prune --production
 
-# Check preinstalled packages
-RUN npm ls crawlee apify puppeteer playwright
+# Expose port
+EXPOSE 3001
 
-# Copy just package.json and package-lock.json
-# to speed up the build using Docker layer cache.
-COPY --chown=myuser:myuser package*.json ./
-
-# Install NPM packages, skip optional and development dependencies to
-# keep the image small. Avoid logging too much and print the dependency
-# tree for debugging
-RUN npm --quiet set progress=false \
-    && npm install --omit=dev --omit=optional \
-    && echo "Installed NPM packages:" \
-    && (npm list --omit=dev --all || true) \
-    && echo "Node.js version:" \
-    && node --version \
-    && echo "NPM version:" \
-    && npm --version \
-    && rm -r ~/.npm
-
-# Copy built JS files from builder image
-COPY --from=builder --chown=myuser:myuser /usr/src/app/dist ./dist
-
-# Next, copy the remaining files and directories with the source code.
-# Since we do this after NPM install, quick build will be really fast
-# for most source file changes.
-COPY --chown=myuser:myuser . ./
-
-# Run the image.
-CMD npm run start:prod --silent
+# Start the server
+CMD ["node", "dist/main.js"]
