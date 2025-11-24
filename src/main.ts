@@ -1,45 +1,95 @@
-/**
- * MCP Server - Main Entry Point
- *
- * This file serves as the entry point for the MCP Server Actor.
- * It sets up a proxy server that forwards requests to the locally running
- * MCP server, which provides a Model Context Protocol (MCP) interface.
- */
+import express, { Request, Response } from "express";
+import bodyParser from "body-parser";
+import * as spotifyHandler from "./spotifyHandler.js";
+import { parsePlaylistIntent } from "./nlpHelper.js";
+import { RateLimiter } from "./rateLimiter.js";
+import { MCPRequest, MCPResponse } from "./types.js";
 
-// Apify SDK - toolkit for building Apify Actors (Read more at https://docs.apify.com/sdk/js/)
-import { Actor, log } from 'apify';
+const app = express();
+const PORT = process.env.PORT || 3001;
+const ENABLE_NLP = process.env.ENABLE_NLP !== 'false';
 
-import { startServer } from './server.js';
+// Rate limiter: 100 requests per minute
+const globalRateLimiter = new RateLimiter(100, 100/60);
 
-// This is an ESM project, and as such, it requires you to specify extensions in your relative imports
-// Read more about this here: https://nodejs.org/docs/latest-v18.x/api/esm.html#mandatory-file-extensions
-// Note that we need to use `.js` even when inside TS files
-// import { router } from './routes.js';
+app.use(bodyParser.json());
+app.use(express.static("public"));
 
-// Configuration constants for the MCP server
-// Command to run the Everything MCP Server
-// TODO: Do not forget to install the MCP server in package.json (using `npm install ...`)
-const MCP_COMMAND = ['npx', '@modelcontextprotocol/server-everything'];
+// Health check
+app.get("/", (req, res) => {
+  res.sendFile("index.html", { root: "public" });
+});
 
-// Check if the Actor is running in standby mode
-const STANDBY_MODE = process.env.APIFY_META_ORIGIN === 'STANDBY';
-const SERVER_PORT = parseInt(process.env.ACTOR_WEB_SERVER_PORT || '3001', 10);
+app.get("/health", (req, res) => {
+  res.json({ status: "healthy" });
+});
 
-// Initialize the Apify Actor environment
-// The init() call configures the Actor for its environment. It's recommended to start every Actor with an init()
-await Actor.init();
+app.get("/stats", (req, res) => {
+    res.json({
+        status: "running",
+        uptime: process.uptime(),
+        rateLimitTokens: globalRateLimiter.getTokens()
+    });
+});
 
-// Charge for Actor start
-await Actor.charge({ eventName: 'actor-start' });
+// MCP Endpoint
+app.post("/mcp", async (req: Request, res: Response) => {
+  const body = req.body as MCPRequest;
+  
+  if (!globalRateLimiter.consume()) {
+      res.status(429).json({ status: 'error', message: 'Rate limit exceeded' });
+      return;
+  }
 
-if (!STANDBY_MODE) {
-    // If the Actor is not in standby mode, we should not run the MCP server
-    const msg = 'This Actor is not meant to be run directly. It should be run in standby mode.';
-    log.error(msg);
-    await Actor.exit({ statusMessage: msg });
+  console.log('MCP Request:', body);
+
+  try {
+      let result;
+      switch (body.tool) {
+          case 'search-track':
+              result = await spotifyHandler.searchTracks(body.input.query, body.input.limit);
+              break;
+          case 'recommend':
+              result = await spotifyHandler.getRecommendations(body.input);
+              break;
+          case 'create-playlist':
+              let playlistName = body.input.name;
+              let description = body.input.description;
+              
+              result = await spotifyHandler.createPlaylist(
+                  body.input.userId,
+                  playlistName,
+                  description || '',
+                  body.input.trackUris || [],
+                  body.input.public
+              );
+              break;
+          default:
+              res.status(400).json({ status: 'error', message: 'Unknown tool' });
+              return;
+      }
+      res.json(result);
+  } catch (error: any) {
+      console.error('Error processing request:', error);
+      res.status(500).json({ status: 'error', message: error.message });
+  }
+});
+
+async function start() {
+    // Load credentials
+    const clientId = process.env.SPOTIFY_CLIENT_ID || 'f6b396ecab7646afab201c9eecaa7dd3';
+    const clientSecret = process.env.SPOTIFY_CLIENT_SECRET || 'fd407d0f8a0c49eebb0591ee77139544';
+    const refreshToken = process.env.SPOTIFY_REFRESH_TOKEN || 'AQDs2gFJ-PcVZtSriscGAJuSQq34UMO8IHagDrToHQW1JnKKkayj8vyTj2iExt2M2ZjkKx9mXHYR9YZUK-f-W6kGWSEVEBebm17TwC7VXSHNf5CjYTbICCjrfioHvwBSSlc';
+
+    if (clientId && clientSecret && refreshToken) {
+        spotifyHandler.initializeSpotify(clientId, clientSecret, refreshToken);
+    } else {
+        console.error("Missing Spotify credentials!");
+    }
+
+    app.listen(PORT, () => {
+        console.log(\Server running on port \\);
+    });
 }
 
-await startServer({
-    serverPort: SERVER_PORT,
-    command: MCP_COMMAND,
-});
+start();
