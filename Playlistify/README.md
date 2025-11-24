@@ -2,7 +2,7 @@
 
 > **AI-powered Spotify playlist generator with natural language understanding**
 
-A production-ready Model Context Protocol (MCP) server for Spotify, deployable on the Apify platform. Create unique, personalized Spotify playlists using natural language descriptions. This Actor exposes an HTTP endpoint that AI clients can use to search tracks, get recommendations, and create playlists via natural language.
+A production-ready web application for creating personalized Spotify playlists using AI. Simply describe your mood in natural language, and Playlistify AI curates the perfect playlist instantly.
 
 [![Live Demo](https://img.shields.io/badge/Live-Demo-brightgreen)](https://playlistify-ai.vercel.app)
 [![GitHub](https://img.shields.io/badge/GitHub-Repository-blue)](https://github.com/avanishkasar/Playlistify-AI)
@@ -22,10 +22,10 @@ Playlistify AI transforms how you discover music on Spotify. Describe your mood 
 * 🎨 **Natural Language** - Describe your mood or activity in plain English
 * ⚡ **Lightning Fast** - Optimized caching and rate limiting
 * ✅ **Auto-Create Playlists** - Instantly save playlists to your Spotify account
-* 🚀 **Multi-Platform** - Web, API, and MCP server
+* 🚀 **Multi-Platform** - Web interface and REST API
 
-### **MCP Server Features**
-* **MCP-Compatible HTTP Server** - Exposes `/mcp` endpoint for AI tool calls
+### **API Features**
+* **RESTful HTTP API** - Exposes `/mcp` endpoint for playlist operations
 * **Three Core Tools**:
   1. `search-track` - Search Spotify catalog by keyword
   2. `recommend` - Get personalized recommendations using seeds
@@ -36,19 +36,8 @@ Playlistify AI transforms how you discover music on Spotify. Describe your mood 
 * ✅ Response caching (LRU cache with TTL)
 * ✅ NLP enhancement for natural language playlist descriptions
 * ✅ Request validation and error handling
-* ✅ Billing integration with `Actor.charge()`
-* ✅ Structured logging with `log.info()`
+* ✅ Structured logging
 * ✅ TypeScript with full type safety
-
----
-
-## 🔗 Live Links
-
-| Platform | URL |
-|----------|-----|
-| **🌐 Website** | Coming soon (Vercel) |
-| **📡 API** | Coming soon (Railway) |
-| **🤖 Apify** | Coming soon |
 
 ---
 
@@ -56,61 +45,86 @@ Playlistify AI transforms how you discover music on Spotify. Describe your mood 
 
 ### Local Development
 
-1. **Frontend**
-   ```bash
-   cd ai-groove-lab
-   npm install && npm run dev
-   # Opens on http://localhost:8080
-   ```
+```bash
+# Install dependencies
+npm install
 
-2. **Backend**
-   ```bash
-   cd Playlistify
-   npm install && npm run dev
-   # Runs on http://localhost:3001
-   ```
+# Run in development mode
+npm run dev
+# Server starts on http://localhost:3001
 
-3. **Get Spotify credentials** from [developer.spotify.com](https://developer.spotify.com/dashboard)
+# Build for production
+npm run build
+
+# Run production build
+npm start
+```
+
+The application comes with pre-configured Spotify credentials for immediate use.
 
 ---
 
-## 📦 Deployment (Option B Strategy)
+## 📦 Deployment
 
-### 🌐 Frontend → Vercel
-1. Import from GitHub
-2. Root: `ai-groove-lab`
-3. Framework: Vite
-4. Set env vars
-5. Deploy!
+### 🐳 Docker Deployment
 
-### 🚂 Backend → Railway
-1. Import from GitHub
-2. Root: `Playlistify`
-3. Set env vars
-4. Auto-deploy!
+```bash
+# Build Docker image
+docker build -t playlistify-ai .
 
-### 🤖 MCP Server → Apify
-1. Create Actor from Git
-2. Folder: `Playlistify`
-3. Publish to marketplace
+# Run container
+docker run -p 3001:3001 playlistify-ai
+```
 
-**📖 Full guide**: [DEPLOYMENT.md](./DEPLOYMENT.md)
+### ☁️ Cloud Platforms
+
+**Recommended platforms for deployment:**
+
+- **Vercel** - For static frontend
+- **Railway** / **Render** / **Fly.io** - For Node.js backend
+- **DigitalOcean App Platform** - Full-stack deployment
+- **AWS / GCP / Azure** - Enterprise deployment
+
+### Environment Variables (Optional)
+
+While the app comes with pre-configured credentials, you can override them:
+
+```bash
+PORT=3001
+ENABLE_NLP=false
+ENABLE_CACHE=true
+ENABLE_RATE_LIMITING=true
+```
+
+---
+
+## 🚀 Deployment
+
+### Railway (Recommended)
+
+The easiest way to deploy is using Railway. See our [Railway Deployment Guide](RAILWAY_DEPLOYMENT.md) for detailed instructions.
+
+[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/template?template=https%3A%2F%2Fgithub.com%2FViverun%2FPlaylistify-AI&envs=SPOTIFY_CLIENT_ID%2CSPOTIFY_CLIENT_SECRET%2CSPOTIFY_REFRESH_TOKEN%2CENABLE_NLP&optionalEnvs=SPOTIFY_CLIENT_ID%2CSPOTIFY_CLIENT_SECRET%2CSPOTIFY_REFRESH_TOKEN%2CENABLE_NLP&defaults.ENABLE_NLP=true)
+
+### Apify
+
+You can also deploy as an Apify Actor. See [Apify Deployment Guide](APIFY_DEPLOYMENT.md).
 
 ---
 
 ## 🏗️ Tech Stack
 
-**Frontend**: React, TypeScript, Vite, Shadcn UI, Supabase  
-**Backend**: Node.js, Express, Spotify Web API  
-**Deployment**: Vercel, Railway, Apify
+**Backend**: Node.js, Express, TypeScript, Spotify Web API  
+**Frontend**: HTML, CSS, JavaScript  
+**Deployment**: Docker, Any Node.js hosting platform
 
 ---
 
-## 🏆 Hackathon Tracks
+## 🏆 Features
 
-- ✅ **Apify $1M Challenge** - MCP implementation
-- ✅ **GitHub** - Most Creative Use
-- ✅ **Main Hackathon** - Innovation prize
+- ✅ **Production Ready** - Full error handling and logging
+- ✅ **Fast & Efficient** - Built-in caching and rate limiting
+- ✅ **Type Safe** - Written in TypeScript
 
 ---
 
@@ -131,7 +145,6 @@ MIT License - see [LICENSE](./LICENSE) file for details
 
 **Made with ❤️ for Hack This Fall 2025**
 
-[📦 GitHub](https://github.com/avanishkasar/Playlistify-AI) • [📖 Docs](./DEPLOYMENT.md)
+[📦 GitHub](https://github.com/avanishkasar/Playlistify-AI)
 
 </div>
-# Playlistify-AI
