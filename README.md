@@ -2,15 +2,29 @@
 
 > **Your words. Your vibe. Perfect playlists.**
 
-[![Live Demo](https://img.shields.io/badge/Live%20Demo-Visit%20Site-brightgreen?style=for-the-badge)](https://playlistifyai.up.railway.app)
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Visit%20Site-brightgreen?style=for-the-badge)](https://playlistify.up.railway.app)
+[![Apify Actor](https://img.shields.io/badge/Apify-Pro%20Version-orange?style=for-the-badge&logo=apify&logoColor=white)](https://apify.com/viverun/playlistfy)
 [![License](https://img.shields.io/badge/License-MIT-blue?style=for-the-badge)](LICENSE)
 [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)](https://nodejs.org/)
 [![Spotify](https://img.shields.io/badge/Spotify-1DB954?style=for-the-badge&logo=spotify&logoColor=white)](https://developer.spotify.com/)
 
-An AI-powered playlist generator that turns natural language into curated Spotify playlists. Describe your mood, activity, or vibe in plain English—get the perfect soundtrack instantly.
+An AI-powered playlist generator that turns natural language into curated Spotify playlists. Describe your mood, activity, or vibe in plain English (or Hindi, Tamil, Telugu!)—get the perfect soundtrack instantly.
 
-**🔗 Live Application:** [playlistifyai.up.railway.app](https://playlistifyai.up.railway.app)
+**🔗 Live Application:** [playlistify.up.railway.app](https://playlistify.up.railway.app)
+
+**🚀 Pro Version (Apify):** [apify.com/viverun/playlistfy](https://apify.com/viverun/playlistfy)
+
+---
+
+## 👥 Team DDoxer
+
+Built for **Hack This Fall 2025** 🏆
+
+| Team Member | Role | Connect |
+|-------------|------|---------|
+| **Avanish Kasar** | Lead Developer | [![X](https://img.shields.io/badge/X-000000?style=flat-square&logo=x&logoColor=white)](https://x.com/only_avanish) [![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=flat-square&logo=linkedin&logoColor=white)](https://linkedin.com/in/avanishkasar) |
+| **Jamil** | Co-Developer | |
 
 ---
 
@@ -18,21 +32,30 @@ An AI-powered playlist generator that turns natural language into curated Spotif
 
 <div align="center">
 
-<img src="https://github.com/avanishkasar/Playlistify-AI/blob/main/1.png" alt="Playlistify AI Interface" width="800"/>
+### 🏠 Home Page
+<img src="https://github.com/avanishkasar/Playlistify-AI/blob/main/home%20page.png" alt="Playlistify AI Home Page" width="800"/>
 
-<img src="https://github.com/avanishkasar/Playlistify-AI/blob/main/2.png" alt="Playlist Generation" width="800"/>
+### 👥 About Us
+<img src="https://github.com/avanishkasar/Playlistify-AI/blob/main/about.png" alt="About Team DDoxer" width="800"/>
 
-<img src="https://github.com/avanishkasar/Playlistify-AI/blob/main/3.png" alt="Results Display" width="800"/>
+### ⚙️ How It Works
+<img src="https://github.com/avanishkasar/Playlistify-AI/blob/main/How%20It%20Works.png" alt="How Playlistify Works" width="800"/>
+
+### 🎵 Curated Picks
+<img src="https://github.com/avanishkasar/Playlistify-AI/blob/main/Curated%20picks.png" alt="Curated Playlist Picks" width="800"/>
+
+### 🚀 Pro Version (Apify)
+<img src="https://github.com/avanishkasar/Playlistify-AI/blob/main/pro%20page.png" alt="Apify Pro Version" width="800"/>
 
 </div>
 
 ---
 
-## 🎥 Video Tutorial
+## 🎥 Video Demo
 
 <div align="center">
 
-[![Watch Tutorial](https://img.shields.io/badge/▶️_Watch-Video_Tutorial-red?style=for-the-badge&logo=youtube)](YOUR_YOUTUBE_VIDEO_LINK)
+[![Watch Demo](https://img.shields.io/badge/▶️_Watch-Video_Demo-red?style=for-the-badge&logo=youtube)](YOUR_YOUTUBE_VIDEO_LINK)
 
 *Click above to watch a complete walkthrough of Playlistify AI*
 
@@ -49,9 +72,11 @@ ai machine-learning nlp natural-language-processing spotify spotify-api playlist
 ## ✨ What Makes It Special
 
 - **🧠 Natural Language Understanding:** Just type what you're feeling - *"High energy 80s pop for a workout"* or *"Chill lo-fi beats for studying"*
+- **🌍 Multi-Language Support:** Works with English, Hindi, Tamil, and Telugu!
 - **🎯 Smart Track Selection:** Combines direct search and Spotify's recommendation engine for optimal results
 - **⚡ Lightning Fast:** Intelligent caching system reduces API calls and delivers instant results
 - **🎨 Clean Playlists:** Automatic duplicate detection ensures every track is unique
+- **📱 Beautiful UI:** iOS-inspired liquid glass design with premium animations
 - **🚀 Production Ready:** Fully containerized and optimized for seamless deployment
 
 ---
@@ -63,9 +88,12 @@ ai machine-learning nlp natural-language-processing spotify spotify-api playlist
 | **Runtime** | Node.js |
 | **Language** | TypeScript |
 | **Backend** | Express.js |
+| **Frontend** | Vanilla HTML/CSS/JS with iOS Liquid Glass Theme |
 | **API Integration** | Spotify Web API |
+| **NLP** | Custom keyword-based parser with multi-language support |
 | **Containerization** | Docker |
 | **Hosting** | Railway |
+| **Pro Version** | Apify Actor with MCP Tools |
 
 ---
 
@@ -82,13 +110,13 @@ ai machine-learning nlp natural-language-processing spotify spotify-api playlist
 ## 🚀 Quick Start
 
 ### Try It Now
-Visit [playlistifyai.up.railway.app](https://playlistifyai.up.railway.app) and start creating playlists instantly!
+Visit [playlistify.up.railway.app](https://playlistify.up.railway.app) and start creating playlists instantly!
 
 ### Run Locally
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/Viverun/Playlistify-AI.git
+   git clone https://github.com/avanishkasar/Playlistify-AI.git
    cd Playlistify-AI
    ```
 
@@ -173,6 +201,23 @@ Try these prompts to see Playlistify AI in action:
 - *"Dark electronic music for late night coding"*
 - *"Happy pop songs for a road trip"*
 - *"Melancholic indie rock for introspection"*
+- *"खुश गाने सुबह के लिए"* (Happy songs for morning - Hindi)
+- *"இரவு நேரத்திற்கான மெதுவான பாடல்கள்"* (Slow songs for night - Tamil)
+
+---
+
+## 🚀 Pro Version (Apify)
+
+For developers and power users, we offer a **Pro version on Apify** with MCP (Model Context Protocol) tools:
+
+[![Try on Apify](https://img.shields.io/badge/Try%20on%20Apify-Pro%20Version-orange?style=for-the-badge&logo=apify)](https://apify.com/viverun/playlistfy)
+
+**MCP Tools Available:**
+- `search-track` - Search Spotify tracks by query
+- `recommend` - Get AI-powered track recommendations  
+- `create-playlist` - Create playlists directly on Spotify
+
+**Pricing:** Pay per event (API call) - perfect for automation and integrations!
 
 ---
 
@@ -196,41 +241,20 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 - Built with [Spotify Web API](https://developer.spotify.com/documentation/web-api/)
 - Deployed on [Railway](https://railway.app/)
+- Pro Version on [Apify](https://apify.com/)
 - Powered by TypeScript and Node.js
+- Built for **Hack This Fall 2025** 🏆
 
 ---
 
 <div align="center">
 
-**Made with ❤️ and AI**
+**Made with ❤️ by Team DDoxer**
 
-[Try it Now](https://playlistifyai.up.railway.app) | [Report Issue](https://github.com/Viverun/Playlistify-AI/issues) | [Request Feature](https://github.com/Viverun/Playlistify-AI/issues)
+[Try it Now](https://playlistify.up.railway.app) | [Pro Version](https://apify.com/viverun/playlistfy) | [Report Issue](https://github.com/avanishkasar/Playlistify-AI/issues) | [Request Feature](https://github.com/avanishkasar/Playlistify-AI/issues)
+
+[![X](https://img.shields.io/badge/X-000000?style=for-the-badge&logo=x&logoColor=white)](https://x.com/only_avanish)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://linkedin.com/in/avanishkasar)
+[![GitHub](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/avanishkasar)
 
 </div>
-2. Click on **Link Git Repository** button
-
-### Push project on your local machine to Apify
-
-You can also deploy the project on your local machine to Apify without the need for the Git repository.
-
-1. Log in to Apify. You will need to provide your [Apify API Token](https://console.apify.com/account/integrations) to complete this action.
-
-    ```bash
-    apify login
-    ```
-
-2. Deploy your Actor. This command will deploy and build the Actor on the Apify Platform. You can find your newly created Actor under [Actors -> My Actors](https://console.apify.com/actors?tab=my).
-
-    ```bash
-    apify push
-    ```
-
-## Documentation reference
-
-To learn more about Apify and Actors, take a look at the following resources:
-
-- [Apify SDK for JavaScript documentation](https://docs.apify.com/sdk/js)
-- [Apify SDK for Python documentation](https://docs.apify.com/sdk/python)
-- [Apify Platform documentation](https://docs.apify.com/platform)
-- [Join our developer community on Discord](https://discord.com/invite/jyEM2PRvMU)
-#
