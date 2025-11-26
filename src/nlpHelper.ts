@@ -8,8 +8,9 @@ import { NLPPlaylistIntent } from './types.js';
  * -> { mood: 'mellow', activity: 'morning', suggestedSeeds: { genres: ['acoustic', 'folk'] } }
  */
 
-// Mood to genre mappings
+// Mood to genre mappings (English + Hindi + Tamil + Telugu)
 const MOOD_GENRE_MAP: Record<string, string[]> = {
+  // English
   happy: ['pop', 'dance', 'funk'],
   sad: ['blues', 'indie', 'acoustic'],
   energetic: ['electronic', 'rock', 'metal'],
@@ -19,9 +20,49 @@ const MOOD_GENRE_MAP: Record<string, string[]> = {
   party: ['dance', 'edm', 'hip-hop'],
   focus: ['classical', 'ambient', 'study'],
   workout: ['rock', 'metal', 'electronic'],
+  chill: ['chill', 'lo-fi', 'ambient'],
+  relax: ['ambient', 'chill', 'acoustic'],
+  study: ['classical', 'lo-fi', 'ambient'],
+  // Hindi (खुश, उदास, etc.)
+  'खुश': ['pop', 'dance', 'bollywood'],
+  'खुशी': ['pop', 'dance', 'bollywood'],
+  'उदास': ['blues', 'indie', 'acoustic'],
+  'दुखी': ['blues', 'indie', 'acoustic'],
+  'शांत': ['ambient', 'classical', 'chill'],
+  'रोमांटिक': ['r-n-b', 'soul', 'bollywood'],
+  'प्यार': ['r-n-b', 'soul', 'bollywood'],
+  'पार्टी': ['dance', 'edm', 'bollywood'],
+  'व्यायाम': ['rock', 'electronic', 'hip-hop'],
+  'जिम': ['rock', 'electronic', 'hip-hop'],
+  'पढ़ाई': ['classical', 'lo-fi', 'ambient'],
+  'आराम': ['ambient', 'chill', 'acoustic'],
+  'सोना': ['ambient', 'classical', 'sleep'],
+  'ऊर्जा': ['electronic', 'rock', 'dance'],
+  'मस्ती': ['dance', 'bollywood', 'pop'],
+  // Tamil (மகிழ்ச்சி, etc.)
+  'மகிழ்ச்சி': ['pop', 'dance', 'tamil'],
+  'சோகம்': ['blues', 'indie', 'acoustic'],
+  'அமைதி': ['ambient', 'classical', 'chill'],
+  'காதல்': ['r-n-b', 'soul', 'tamil'],
+  'கட்சி': ['dance', 'edm', 'tamil'],
+  'உடற்பயிற்சி': ['rock', 'electronic', 'hip-hop'],
+  'படிப்பு': ['classical', 'lo-fi', 'ambient'],
+  'ஓய்வு': ['ambient', 'chill', 'acoustic'],
+  'ஆற்றல்': ['electronic', 'rock', 'dance'],
+  // Telugu (సంతోషం, etc.)
+  'సంతోషం': ['pop', 'dance', 'telugu'],
+  'బాధ': ['blues', 'indie', 'acoustic'],
+  'ప్రశాంతం': ['ambient', 'classical', 'chill'],
+  'ప్రేమ': ['r-n-b', 'soul', 'telugu'],
+  'పార్టీ': ['dance', 'edm', 'telugu'],
+  'వ్యాయామం': ['rock', 'electronic', 'hip-hop'],
+  'చదువు': ['classical', 'lo-fi', 'ambient'],
+  'విశ్రాంతి': ['ambient', 'chill', 'acoustic'],
+  'శక్తి': ['electronic', 'rock', 'dance'],
 };
 
 const ACTIVITY_GENRE_MAP: Record<string, string[]> = {
+  // English
   morning: ['acoustic', 'folk', 'indie'],
   night: ['electronic', 'ambient', 'chill'],
   workout: ['rock', 'electronic', 'metal'],
@@ -29,19 +70,67 @@ const ACTIVITY_GENRE_MAP: Record<string, string[]> = {
   party: ['dance', 'hip-hop', 'pop'],
   sleep: ['ambient', 'classical', 'chill'],
   driving: ['rock', 'pop', 'country'],
+  coding: ['electronic', 'lo-fi', 'ambient'],
+  cooking: ['jazz', 'pop', 'acoustic'],
+  running: ['electronic', 'rock', 'hip-hop'],
+  meditation: ['ambient', 'classical', 'new-age'],
+  // Hindi
+  'सुबह': ['acoustic', 'folk', 'indie'],
+  'रात': ['electronic', 'ambient', 'chill'],
+  'नींद': ['ambient', 'classical', 'sleep'],
+  'गाड़ी': ['rock', 'pop', 'bollywood'],
+  'ड्राइविंग': ['rock', 'pop', 'bollywood'],
+  'खाना': ['jazz', 'pop', 'acoustic'],
+  'दौड़': ['electronic', 'rock', 'hip-hop'],
+  'ध्यान': ['ambient', 'classical', 'indian-classical'],
+  // Tamil
+  'காலை': ['acoustic', 'folk', 'indie'],
+  'இரவு': ['electronic', 'ambient', 'chill'],
+  'தூக்கம்': ['ambient', 'classical', 'sleep'],
+  'ஓட்டுதல்': ['rock', 'pop', 'tamil'],
+  'சமையல்': ['jazz', 'pop', 'acoustic'],
+  'தியானம்': ['ambient', 'classical', 'indian-classical'],
+  // Telugu
+  'ఉదయం': ['acoustic', 'folk', 'indie'],
+  'రాత్రి': ['electronic', 'ambient', 'chill'],
+  'నిద్ర': ['ambient', 'classical', 'sleep'],
+  'డ్రైవింగ్': ['rock', 'pop', 'telugu'],
+  'వంట': ['jazz', 'pop', 'acoustic'],
+  'ధ్యానం': ['ambient', 'classical', 'indian-classical'],
+};
+
+// Language detection patterns
+const LANGUAGE_PATTERNS = {
+  hindi: /[\u0900-\u097F]/,
+  tamil: /[\u0B80-\u0BFF]/,
+  telugu: /[\u0C00-\u0C7F]/,
 };
 
 /**
+ * Detect language from text
+ */
+function detectLanguage(text: string): 'english' | 'hindi' | 'tamil' | 'telugu' {
+  if (LANGUAGE_PATTERNS.hindi.test(text)) return 'hindi';
+  if (LANGUAGE_PATTERNS.tamil.test(text)) return 'tamil';
+  if (LANGUAGE_PATTERNS.telugu.test(text)) return 'telugu';
+  return 'english';
+}
+
+/**
  * Parse natural language intent without calling external APIs
- * Simple keyword matching approach
+ * Simple keyword matching approach - supports English, Hindi, Tamil, Telugu
  */
 export function parsePlaylistIntent(description: string): NLPPlaylistIntent {
   const lower = description.toLowerCase();
   const intent: NLPPlaylistIntent = {};
+  
+  // Detect language
+  const language = detectLanguage(description);
+  console.log('Detected language:', language);
 
-  // Detect mood keywords
+  // Detect mood keywords (check both original and lowercase)
   for (const [mood, genres] of Object.entries(MOOD_GENRE_MAP)) {
-    if (lower.includes(mood)) {
+    if (lower.includes(mood.toLowerCase()) || description.includes(mood)) {
       intent.mood = mood;
       intent.suggestedSeeds = { genres };
       break;
@@ -50,7 +139,7 @@ export function parsePlaylistIntent(description: string): NLPPlaylistIntent {
 
   // Detect activity keywords
   for (const [activity, genres] of Object.entries(ACTIVITY_GENRE_MAP)) {
-    if (lower.includes(activity)) {
+    if (lower.includes(activity.toLowerCase()) || description.includes(activity)) {
       intent.activity = activity;
       if (!intent.suggestedSeeds) {
         intent.suggestedSeeds = { genres };
@@ -66,7 +155,7 @@ export function parsePlaylistIntent(description: string): NLPPlaylistIntent {
   }
 
   // Detect explicit genre mentions
-  const commonGenres = ['rock', 'pop', 'jazz', 'classical', 'electronic', 'hip-hop', 'country', 'metal', 'indie', 'folk'];
+  const commonGenres = ['rock', 'pop', 'jazz', 'classical', 'electronic', 'hip-hop', 'country', 'metal', 'indie', 'folk', 'bollywood', 'tamil', 'telugu', 'lo-fi', 'ambient', 'edm', 'r&b', 'soul'];
   const detectedGenres: string[] = [];
   for (const genre of commonGenres) {
     if (lower.includes(genre)) {
@@ -80,7 +169,7 @@ export function parsePlaylistIntent(description: string): NLPPlaylistIntent {
     }
   }
 
-  console.log('Parsed NLP intent', { description, intent });
+  console.log('Parsed NLP intent', { description, language, intent });
   return intent;
 }
 
