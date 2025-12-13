@@ -9,7 +9,7 @@
 ## 1️⃣ PROBLEM STATEMENT (≈30 seconds)
 
 **Who faces this problem:**
-- Spotify users with 100+ million active listeners globally
+- Spotify users (600+ million globally, 200+ million premium subscribers)
 - Music enthusiasts who spend excessive time searching for the perfect playlist
 - People who want music that matches their exact mood or activity
 
@@ -79,7 +79,7 @@ Imagine you just finished a tough workout and want "energetic 80s rock for cooli
 - Responsive UI with real-time status indicators
 
 **Backend:**
-- Node.js 20+ (Runtime)
+- Node.js 20.0.0+ (Runtime)
 - TypeScript (Language - Type-safe development)
 - Express.js (REST API framework)
 
@@ -269,7 +269,7 @@ Build a production-ready Spotify playlist generator that demonstrates the full c
 - Automatic retry logic for transient failures
 
 📊 **User Capacity:**
-- Current setup: 100+ concurrent users
+- Current setup: Estimated 100+ concurrent users (based on stateless architecture and Railway's standard tier)
 - Scalable via Railway/Apify auto-scaling
 - No database bottleneck (stateless architecture)
 
